@@ -20,9 +20,11 @@ body {
     background-color: lightgray;
     cursor: pointer;
     border-radius: 5px;
+    box-sizing: border-box;
 }
 .cell.taken {
     cursor: not-allowed;
+    background-color: rgb(190, 190, 190);
 }
 .winner {
     font-size: 1.5em;

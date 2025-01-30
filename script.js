@@ -9,14 +9,23 @@ const winPatterns = [
 
 function initRender() {
     board.innerHTML = "";
+    renderCurrentPlayer();
+    renderAllCells();
+}
+
+function renderAllCells() {
     inputFields.forEach((value, index) => {
         let cell = createCell(index);
         let setSymbol = value === "cross" ? "X" : "O";
         cell.innerHTML = value ? setSymbol : "";
-        disableIfContentInCell(cell, value);
+        disableAndColorClickedCell(cell, value);
         cell.addEventListener("click", handleClick);
         board.appendChild(cell);
     });
+}
+
+function renderCurrentPlayer() {
+    document.getElementById("current-player").innerText = `Spieler ${currentPlayer === "cross" ? "X" : "O"} ist dran`;
 }
 
 function createCell(index) {
@@ -26,10 +35,15 @@ function createCell(index) {
     return cell;
 }
 
-function disableIfContentInCell(cell, value) {
-    if (value) {
+function disableAndColorClickedCell(cell, value) {
+    if (value && value === "cross") {
         cell.classList.add("taken");
-    };
+        cell.style.backgroundColor ="rgb(101, 160, 180)";
+    }
+    if (value && value === "circle") {
+        cell.classList.add("taken");
+        cell.style.backgroundColor ="rgb(235, 165, 105)";
+    }
 }
 
 function handleClick(event) {
@@ -47,12 +61,22 @@ function checkForEnd() {
         const [a, b, c] = pattern;
         if (inputFields[a] && inputFields[a] === inputFields[b] && inputFields[a] === inputFields[c]) {
             document.getElementById("winner").innerText = `${inputFields[a] === "cross" ? "X" : "O"} gewinnt!`;
+            document.getElementById("current-player").innerText = `Spiel vorbei!`;
+            highlightWinningPattern([a, b, c]);
             disableAllCells();
         }
     }
     if (!inputFields.includes(null)) {
         document.getElementById("winner").innerText = "Unentschieden!";
     }
+}
+
+function highlightWinningPattern(pattern) {
+    pattern.forEach((index) => {
+        let cell = document.querySelector(`[data-index='${index}']`);
+        cell.style.backgroundColor = "lime";
+        cell.style.border = "3px solid rgb(105, 176, 105)";
+    });
 }
 
 function disableAllCells() {
